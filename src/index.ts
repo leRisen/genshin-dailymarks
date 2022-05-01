@@ -143,3 +143,4 @@ class GenshinDailyMarks {
 }
 
 export default GenshinDailyMarks
+module.exports = GenshinDailyMarks

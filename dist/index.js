@@ -124,3 +124,4 @@ class GenshinDailyMarks {
     }
 }
 exports.default = GenshinDailyMarks;
+module.exports = GenshinDailyMarks;
