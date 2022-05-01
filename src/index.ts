@@ -24,11 +24,11 @@ class GenshinDailyMarks {
 
   private mainURL: string
 
-  constructor(config: Config) {
-    this.lang = config.lang || 'ru'
-    this.actId = config.actId || 'e202102251931481'
-    this.apiURL = config.apiURL || 'https://sg-hk4e-api.hoyolab.com/event/sol'
-    this.mainURL = config.mainURL || 'https://webstatic-sea.hoyolab.com/ys/event/signin-sea-v3/index.html'
+  constructor(config?: Config) {
+    this.lang = config?.lang || 'ru'
+    this.actId = config?.actId || 'e202102251931481'
+    this.apiURL = config?.apiURL || 'https://sg-hk4e-api.hoyolab.com/event/sol'
+    this.mainURL = config?.mainURL || 'https://webstatic-sea.hoyolab.com/ys/event/signin-sea-v3/index.html'
   }
 
   private claimReward = async (cookie: string): Promise<ClaimReward | null> => {
