@@ -124,7 +124,7 @@ class GenshinDailyMarks {
       } catch (error) {
         console.log('Ooopsie... where cookies??')
         console.error(error)
-        process.exit(1)
+        return
       }
 
       console.log('Parsed cookies from login')
