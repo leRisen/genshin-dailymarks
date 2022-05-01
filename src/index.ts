@@ -89,7 +89,7 @@ class GenshinDailyMarks {
   }
 
   private isClaimed = async (cookie: string) => this.getDailyStatus(cookie)
-    .then((response) => response ? response.data?.is_sign || false : null)
+    .then((response) => response && response.data ? response.data.is_sign : null)
 
   private checkDailyMarks = async (cookie: string) => {
     const claimed = await this.isClaimed(cookie)

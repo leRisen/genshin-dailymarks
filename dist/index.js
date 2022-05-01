@@ -68,7 +68,7 @@ class GenshinDailyMarks {
         });
         this.isClaimed = (cookie) => __awaiter(this, void 0, void 0, function* () {
             return this.getDailyStatus(cookie)
-                .then((response) => { var _a; return response ? ((_a = response.data) === null || _a === void 0 ? void 0 : _a.is_sign) || false : null; });
+                .then((response) => response && response.data ? response.data.is_sign : null);
         });
         this.checkDailyMarks = (cookie) => __awaiter(this, void 0, void 0, function* () {
             const claimed = yield this.isClaimed(cookie);
