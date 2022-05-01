@@ -1,12 +1,11 @@
 {
   "name": "genshin-dailymarks",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Utils with auto check (2 in 1) for daily marks Genshin Impact",
   "main": "dist/index.js",
   "scripts": {
     "lint": "npx eslint . --ext .js,.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
