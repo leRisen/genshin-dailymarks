@@ -1,6 +1,6 @@
 {
   "name": "genshin-dailymarks",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Utils with auto check (2 in 1) for daily marks Genshin Impact",
   "main": "dist/index.js",
   "scripts": {
