@@ -30,7 +30,7 @@ genshinDailyMarks.autoCheck('tmp/cookies.txt', 'Etc/GMT-8', '10 0 * * *')
 
 | Type | Name | Description | Default
 | --- | --- | --- | --- |
-| String | lang | - | ru |
+| String | lang | - | en |
 | String | actId | Important parameter (static for everyone, take it from site url) | e202102251931481 |
 | String | apiURL | URL for submit requests in API Genshin Impact | https://sg-hk4e-api.hoyolab.com/event/sol |
 | String | mainURL | URL with event daily marks | https://webstatic-sea.hoyolab.com/ys/event/signin-sea-v3/index.html |

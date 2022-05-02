@@ -132,7 +132,7 @@ class GenshinDailyMarks {
                 timezone,
             });
         });
-        this.lang = (config === null || config === void 0 ? void 0 : config.lang) || 'ru';
+        this.lang = (config === null || config === void 0 ? void 0 : config.lang) || 'en';
         this.actId = (config === null || config === void 0 ? void 0 : config.actId) || 'e202102251931481';
         this.apiURL = (config === null || config === void 0 ? void 0 : config.apiURL) || 'https://sg-hk4e-api.hoyolab.com/event/sol';
         this.mainURL = (config === null || config === void 0 ? void 0 : config.mainURL) || 'https://webstatic-sea.hoyolab.com/ys/event/signin-sea-v3/index.html';
