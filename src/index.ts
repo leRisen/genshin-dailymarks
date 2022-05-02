@@ -9,6 +9,8 @@ import type DailyStatus from 'types/DailyStatus'
 import type ClaimReward from 'types/ClaimReward'
 
 class GenshinDailyMarks {
+  readonly SELECTOR_AVATAR_ICON = '.mhy-hoyolab-account-block__avatar-icon'
+
   readonly DEFAULT_HEADERS = {
     'user-agent': randomUserAgent.getRandom((ua) => parseFloat(ua.browserVersion) >= 90) || '',
     Accept: 'application/json, text/plain, */*',
@@ -60,6 +62,9 @@ class GenshinDailyMarks {
 
     const page = await browser.newPage()
     await page.goto(`${this.mainURL}?act_id=${this.actId}&lang=${this.lang}`)
+
+    await page.waitForSelector(this.SELECTOR_AVATAR_ICON)
+    await page.click(this.SELECTOR_AVATAR_ICON)
 
     await page.waitForResponse((response) => response.url().startsWith('https://api-account-os.hoyolab.com/auth/api/getUserAccountInfoByLToken') && response.status() === 200, {
       timeout: 0,

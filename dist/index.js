@@ -19,6 +19,7 @@ const puppeteer_1 = __importDefault(require("puppeteer"));
 const random_useragent_1 = __importDefault(require("random-useragent"));
 class GenshinDailyMarks {
     constructor(config) {
+        this.SELECTOR_AVATAR_ICON = '.mhy-hoyolab-account-block__avatar-icon';
         this.DEFAULT_HEADERS = {
             'user-agent': random_useragent_1.default.getRandom((ua) => parseFloat(ua.browserVersion) >= 90) || '',
             Accept: 'application/json, text/plain, */*',
@@ -48,6 +49,8 @@ class GenshinDailyMarks {
             });
             const page = yield browser.newPage();
             yield page.goto(`${this.mainURL}?act_id=${this.actId}&lang=${this.lang}`);
+            yield page.waitForSelector(this.SELECTOR_AVATAR_ICON);
+            yield page.click(this.SELECTOR_AVATAR_ICON);
             yield page.waitForResponse((response) => response.url().startsWith('https://api-account-os.hoyolab.com/auth/api/getUserAccountInfoByLToken') && response.status() === 200, {
                 timeout: 0,
             });
