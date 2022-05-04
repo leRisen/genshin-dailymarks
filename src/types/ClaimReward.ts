@@ -1,7 +1,9 @@
 type ClaimReward = {
   retcode: number
   message: string
-  data: null
+  data: {
+    code: string
+  } | null
 }
 
 export default ClaimReward
