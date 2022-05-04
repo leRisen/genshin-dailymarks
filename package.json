@@ -5,7 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "lint": "npx eslint . --ext .js,.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint"
   },
   "repository": {
     "type": "git",
