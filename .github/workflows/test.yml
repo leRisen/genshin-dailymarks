@@ -41,4 +41,4 @@ jobs:
         run: npm ci
 
       - name: Run Tests
-        run: npm run test
+        run: ACT_ID=${{env.ACT_ID}} API_URL=${{env.API_URL}} COOKIES=${{env.COOKIES}} API_LANG=${{env.API_LANG}} npm run test
