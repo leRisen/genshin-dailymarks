@@ -4,7 +4,7 @@
   "description": "Utils with auto check (2 in 1) for daily marks Genshin Impact",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "npx eslint . --ext .js,.ts",
+    "lint": "npx eslint . --ext .ts",
     "build": "tsc",
     "prepare": "npm run build",
     "prepublishOnly": "npm run lint"
