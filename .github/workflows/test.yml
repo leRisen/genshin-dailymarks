@@ -22,11 +22,6 @@ jobs:
   tests:
     name: Tests
     runs-on: ubuntu-latest
-    env:
-      ACT_ID: ${{ secrets.ACT_ID }}
-      API_URL: ${{ secrets.API_URL }}
-      COOKIES: ${{ secrets.COOKIES }}
-      API_LANG: ${{ secrets.API_LANG }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -41,4 +36,4 @@ jobs:
         run: npm ci
 
       - name: Run Tests
-        run: ACT_ID=${{env.ACT_ID}} API_URL=${{env.API_URL}} COOKIES=${{env.COOKIES}} API_LANG=${{env.API_LANG}} npm run test
+        run: ACT_ID=${{secrets.ACT_ID}} API_URL=${{secrets.API_URL}} COOKIES=${{secrets.COOKIES}} API_LANG=${{secrets.API_LANG}} npm run test
