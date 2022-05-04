@@ -6,8 +6,6 @@ const API_URL = process.env.API_URL
 const API_LANG = process.env.API_LANG
 const STUPID_COOKIE = process.env.COOKIES || ''
 
-console.log(API_URL)
-
 const DEFAULT_HEADERS = {
   'user-agent': randomUserAgent.getRandom((ua) => parseFloat(ua.browserVersion) >= 90) || '',
   Refer: 'https://webstatic-sea.hoyolab.com',
