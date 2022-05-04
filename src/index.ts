@@ -35,7 +35,7 @@ class GenshinDailyMarks {
     this.mainURL = config?.mainURL || 'https://webstatic-sea.hoyolab.com/ys/event/signin-sea-v3/index.html'
   }
 
-  private claimReward = async (cookies: string): Promise<ClaimReward> => {
+  public claimReward = async (cookies: string): Promise<ClaimReward> => {
     const headers = {
       cookie: cookies,
       ...this.DEFAULT_HEADERS,
@@ -49,7 +49,7 @@ class GenshinDailyMarks {
       .then((response) => response.json())
   }
 
-  private parseCookies = async () => {
+  public parseCookies = async () => {
     const browser = await puppeteer.launch({
       headless: false,
       defaultViewport: null,
@@ -72,7 +72,7 @@ class GenshinDailyMarks {
     return cookies.map((data) => `${data.name}=${data.value}`).join('; ')
   }
 
-  private getDailyStatus = async (cookies: string): Promise<DailyStatus> => {
+  public getDailyStatus = async (cookies: string): Promise<DailyStatus> => {
     const headers = {
       cookie: cookies,
       ...this.DEFAULT_HEADERS,
@@ -83,7 +83,7 @@ class GenshinDailyMarks {
       .then((response) => response.json())
   }
 
-  private isClaimed = async (cookies: string) => this.getDailyStatus(cookies)
+  public isClaimed = async (cookies: string) => this.getDailyStatus(cookies)
     .then((response) => response && response.data ? response.data.is_sign : null)
 
   private checkDailyMarks = async (cookies: string, prefix: string = '') => {
@@ -106,7 +106,7 @@ class GenshinDailyMarks {
     }
   }
 
-  private autoCheck = async (filePath = 'tmp/cookies.txt', timezone = 'Etc/GMT-8', cronExpression = '10 0 * * *') => {
+  public autoCheck = async (filePath = 'tmp/cookies.txt', timezone = 'Etc/GMT-8', cronExpression = '10 0 * * *') => {
     let cookies = ''
     let fileBuffer
 
