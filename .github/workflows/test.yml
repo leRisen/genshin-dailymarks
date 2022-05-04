@@ -40,5 +40,4 @@ jobs:
           ACT_ID: ${{ secrets.ACT_ID }}
           API_URL: ${{ secrets.API_URL }}
           COOKIES: ${{ secrets.COOKIES }}
-          API_LANG: ${{ secrets.API_LANG }}
         run: npm run test

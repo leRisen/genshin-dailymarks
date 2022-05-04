@@ -3,7 +3,7 @@ import randomUserAgent from 'random-useragent'
 
 const ACT_ID = process.env.ACT_ID
 const API_URL = process.env.API_URL
-const API_LANG = process.env.API_LANG
+const API_LANG = 'en'
 const STUPID_COOKIE = process.env.COOKIES || ''
 
 const DEFAULT_HEADERS = {
