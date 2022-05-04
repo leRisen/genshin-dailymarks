@@ -19,3 +19,26 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Node v16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Tests
+        env:
+          ACT_ID: ${{ secrets.ACT_ID }}
+          API_URL: ${{ secrets.API_URL }}
+          COOKIES: ${{ secrets.COOKIES }}
+          API_LANG: ${{ secrets.API_LANG }}
+        run: npm run test
