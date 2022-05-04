@@ -15,20 +15,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const node_cron_1 = __importDefault(require("node-cron"));
 const node_fetch_1 = __importDefault(require("node-fetch"));
+const cookie_1 = __importDefault(require("cookie"));
 const puppeteer_1 = __importDefault(require("puppeteer"));
 const random_useragent_1 = __importDefault(require("random-useragent"));
-const util_1 = require("./util");
 class GenshinDailyMarks {
     constructor(config) {
         this.SELECTOR_AVATAR_ICON = '.mhy-hoyolab-account-block__avatar-icon';
         this.DEFAULT_HEADERS = {
             'user-agent': random_useragent_1.default.getRandom((ua) => parseFloat(ua.browserVersion) >= 90) || '',
+            Refer: 'https://webstatic-sea.hoyolab.com',
             Accept: 'application/json, text/plain, */*',
             Origin: 'https://webstatic-sea.hoyolab.com',
             Connection: 'keep-alive',
         };
-        this.claimReward = (cookie) => __awaiter(this, void 0, void 0, function* () {
-            const headers = Object.assign({ cookie, Refer: this.mainURL }, this.DEFAULT_HEADERS);
+        this.claimReward = (cookies) => __awaiter(this, void 0, void 0, function* () {
+            const headers = Object.assign({ cookie: cookies }, this.DEFAULT_HEADERS);
             return (0, node_fetch_1.default)(`${this.apiURL}/sign?lang=${this.lang}`, {
                 body: JSON.stringify({ act_id: this.actId }),
                 method: 'POST',
@@ -53,24 +54,24 @@ class GenshinDailyMarks {
             yield browser.close();
             return cookies.map((data) => `${data.name}=${data.value}`).join('; ');
         });
-        this.getDailyStatus = (cookie) => __awaiter(this, void 0, void 0, function* () {
-            const headers = Object.assign(Object.assign({ cookie, Refer: this.mainURL }, this.DEFAULT_HEADERS), { 'Cache-Control': 'max-age=0' });
+        this.getDailyStatus = (cookies) => __awaiter(this, void 0, void 0, function* () {
+            const headers = Object.assign(Object.assign({ cookie: cookies }, this.DEFAULT_HEADERS), { 'Cache-Control': 'max-age=0' });
             return (0, node_fetch_1.default)(`${this.apiURL}/info?lang=${this.lang}&act_id=${this.actId}`, { headers })
                 .then((response) => response.json());
         });
-        this.isClaimed = (cookie) => __awaiter(this, void 0, void 0, function* () {
-            return this.getDailyStatus(cookie)
+        this.isClaimed = (cookies) => __awaiter(this, void 0, void 0, function* () {
+            return this.getDailyStatus(cookies)
                 .then((response) => response && response.data ? response.data.is_sign : null);
         });
-        this.checkDailyMarks = (cookie, prefix = '') => __awaiter(this, void 0, void 0, function* () {
-            const claimed = yield this.isClaimed(cookie);
+        this.checkDailyMarks = (cookies, prefix = '') => __awaiter(this, void 0, void 0, function* () {
+            const claimed = yield this.isClaimed(cookies);
             if (claimed !== null) {
                 if (claimed) {
                     console.log(`Reward already claimed when checked at ${new Date().toLocaleString('ru-RU')}`, prefix);
                 }
                 else {
                     console.log('Reward not claimed yet. Claiming reward...', prefix);
-                    const response = yield this.claimReward(cookie);
+                    const response = yield this.claimReward(cookies);
                     if (response) {
                         console.log(`Reward claimed at ${new Date().toLocaleString('ru-RU')}`, prefix);
                         console.log('Claiming complete! message:', response.message, prefix);
@@ -83,7 +84,7 @@ class GenshinDailyMarks {
             }
         });
         this.autoCheck = (filePath = 'tmp/cookies.txt', timezone = 'Etc/GMT-8', cronExpression = '10 0 * * *') => __awaiter(this, void 0, void 0, function* () {
-            let cookie = '';
+            let cookies = '';
             let fileBuffer;
             try {
                 fileBuffer = yield fs_extra_1.default.readFile(filePath);
@@ -97,12 +98,12 @@ class GenshinDailyMarks {
                 }
             }
             if (fileBuffer) {
-                cookie = fileBuffer.toString();
+                cookies = fileBuffer.toString();
                 console.log('Successfully loaded cookies from file');
             }
             else {
                 try {
-                    cookie = yield this.parseCookies();
+                    cookies = yield this.parseCookies();
                 }
                 catch (error) {
                     console.log('Ooopsie... where cookies??');
@@ -110,19 +111,19 @@ class GenshinDailyMarks {
                 }
                 console.log('Parsed cookies from login');
                 console.log(`Writing to file ${filePath}`);
-                yield fs_extra_1.default.outputFile(filePath, cookie);
+                yield fs_extra_1.default.outputFile(filePath, cookies);
             }
-            const accountId = (0, util_1.transformCookieStrToMap)(cookie).get('account_id');
-            if (!accountId) {
+            const objCookies = cookie_1.default.parse(cookies);
+            if (!objCookies.hasOwnProperty('account_id')) {
                 throw new Error('No authorized account id (cookie)');
             }
-            const prefix = `[id: ${accountId}]`;
+            const prefix = `[id: ${objCookies.account_id}]`;
             console.log('Start manually check daily marks', prefix);
-            yield this.checkDailyMarks(cookie, prefix);
+            yield this.checkDailyMarks(cookies, prefix);
             console.log('Schedule cron job', prefix);
             return node_cron_1.default.schedule(cronExpression, () => __awaiter(this, void 0, void 0, function* () {
                 try {
-                    yield this.checkDailyMarks(cookie, prefix);
+                    yield this.checkDailyMarks(cookies, prefix);
                 }
                 catch (error) {
                     console.log('Cron job error', prefix);

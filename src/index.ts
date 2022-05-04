@@ -1,6 +1,7 @@
 import fs from 'fs-extra'
 import cron from 'node-cron'
 import fetch from 'node-fetch'
+import cookie from 'cookie'
 import puppeteer from 'puppeteer'
 import randomUserAgent from 'random-useragent'
 
@@ -8,13 +9,12 @@ import type Config from './types/Config'
 import type DailyStatus from './types/DailyStatus'
 import type ClaimReward from './types/ClaimReward'
 
-import { transformCookieStrToMap } from './util'
-
 class GenshinDailyMarks {
   readonly SELECTOR_AVATAR_ICON = '.mhy-hoyolab-account-block__avatar-icon'
 
   readonly DEFAULT_HEADERS = {
     'user-agent': randomUserAgent.getRandom((ua) => parseFloat(ua.browserVersion) >= 90) || '',
+    Refer: 'https://webstatic-sea.hoyolab.com',
     Accept: 'application/json, text/plain, */*',
     Origin: 'https://webstatic-sea.hoyolab.com',
     Connection: 'keep-alive',
@@ -35,10 +35,9 @@ class GenshinDailyMarks {
     this.mainURL = config?.mainURL || 'https://webstatic-sea.hoyolab.com/ys/event/signin-sea-v3/index.html'
   }
 
-  private claimReward = async (cookie: string): Promise<ClaimReward> => {
+  private claimReward = async (cookies: string): Promise<ClaimReward> => {
     const headers = {
-      cookie,
-      Refer: this.mainURL,
+      cookie: cookies,
       ...this.DEFAULT_HEADERS,
     }
 
@@ -73,10 +72,9 @@ class GenshinDailyMarks {
     return cookies.map((data) => `${data.name}=${data.value}`).join('; ')
   }
 
-  private getDailyStatus = async (cookie: string): Promise<DailyStatus> => {
+  private getDailyStatus = async (cookies: string): Promise<DailyStatus> => {
     const headers = {
-      cookie,
-      Refer: this.mainURL,
+      cookie: cookies,
       ...this.DEFAULT_HEADERS,
       'Cache-Control': 'max-age=0',
     }
@@ -85,17 +83,17 @@ class GenshinDailyMarks {
       .then((response) => response.json())
   }
 
-  private isClaimed = async (cookie: string) => this.getDailyStatus(cookie)
+  private isClaimed = async (cookies: string) => this.getDailyStatus(cookies)
     .then((response) => response && response.data ? response.data.is_sign : null)
 
-  private checkDailyMarks = async (cookie: string, prefix: string = '') => {
-    const claimed = await this.isClaimed(cookie)
+  private checkDailyMarks = async (cookies: string, prefix: string = '') => {
+    const claimed = await this.isClaimed(cookies)
     if (claimed !== null) {
       if (claimed) {
         console.log(`Reward already claimed when checked at ${new Date().toLocaleString('ru-RU')}`, prefix)
       } else {
         console.log('Reward not claimed yet. Claiming reward...', prefix)
-        const response = await this.claimReward(cookie)
+        const response = await this.claimReward(cookies)
         if (response) {
           console.log(`Reward claimed at ${new Date().toLocaleString('ru-RU')}`, prefix)
           console.log('Claiming complete! message:', response.message, prefix)
@@ -109,7 +107,7 @@ class GenshinDailyMarks {
   }
 
   private autoCheck = async (filePath = 'tmp/cookies.txt', timezone = 'Etc/GMT-8', cronExpression = '10 0 * * *') => {
-    let cookie = ''
+    let cookies = ''
     let fileBuffer
 
     try {
@@ -123,11 +121,11 @@ class GenshinDailyMarks {
     }
 
     if (fileBuffer) {
-      cookie = fileBuffer.toString()
+      cookies = fileBuffer.toString()
       console.log('Successfully loaded cookies from file')
     } else {
       try {
-        cookie = await this.parseCookies()
+        cookies = await this.parseCookies()
       } catch (error) {
         console.log('Ooopsie... where cookies??')
         throw error
@@ -135,23 +133,23 @@ class GenshinDailyMarks {
 
       console.log('Parsed cookies from login')
       console.log(`Writing to file ${filePath}`)
-      await fs.outputFile(filePath, cookie)
+      await fs.outputFile(filePath, cookies)
     }
 
-    const accountId = transformCookieStrToMap(cookie).get('account_id')
-    if (!accountId) {
+    const objCookies = cookie.parse(cookies)
+    if (!objCookies.hasOwnProperty('account_id')) {
       throw new Error('No authorized account id (cookie)')
     }
 
-    const prefix = `[id: ${accountId}]`
+    const prefix = `[id: ${objCookies.account_id}]`
 
     console.log('Start manually check daily marks', prefix)
-    await this.checkDailyMarks(cookie, prefix)
+    await this.checkDailyMarks(cookies, prefix)
     console.log('Schedule cron job', prefix)
 
     return cron.schedule(cronExpression, async () => {
       try {
-        await this.checkDailyMarks(cookie, prefix)
+        await this.checkDailyMarks(cookies, prefix)
       } catch (error) {
         console.log('Cron job error', prefix)
         console.error(error)
