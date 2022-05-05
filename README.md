@@ -3,6 +3,7 @@
 [![Version](https://img.shields.io/npm/v/genshin-dailymarks.svg)](https://www.npmjs.com/package/genshin-dailymarks)
 [![Downloads](https://img.shields.io/npm/dt/genshin-dailymarks.svg)](https://www.npmjs.com/package/genshin-dailymarks)
 [![Tests status](https://github.com/discordjs/discord.js/actions/workflows/test.yml/badge.svg)](https://github.com/leRisen/genshin-dailymarks/actions)
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/leRisen/genshin-dailymarks/coverage.svg)](https://codecov.io/gh/leRisen/genshin-dailymarks/)
 
 Simple. Flexible. Configurable. Utils with auto check (2 in 1)
 
