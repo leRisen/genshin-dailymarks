@@ -3,22 +3,17 @@ import cron from 'node-cron'
 import fetch from 'node-fetch'
 import cookie from 'cookie'
 import puppeteer from 'puppeteer'
-import randomUserAgent from 'random-useragent'
 
 import type Config from './types/Config'
 import type DailyStatus from './types/DailyStatus'
 import type ClaimReward from './types/ClaimReward'
 
-class GenshinDailyMarks {
-  readonly SELECTOR_AVATAR_ICON = '.mhy-hoyolab-account-block__avatar-icon'
+import { DEFAULT_HEADERS, SELECTOR_AVATAR_ICON } from './constants'
 
-  readonly DEFAULT_HEADERS = {
-    'user-agent': randomUserAgent.getRandom((ua) => parseFloat(ua.browserVersion) >= 90) || '',
-    Refer: 'https://webstatic-sea.hoyolab.com',
-    Accept: 'application/json, text/plain, */*',
-    Origin: 'https://webstatic-sea.hoyolab.com',
-    Connection: 'keep-alive',
-  }
+class GenshinDailyMarks {
+  readonly SELECTOR_AVATAR_ICON = SELECTOR_AVATAR_ICON
+
+  readonly DEFAULT_HEADERS = DEFAULT_HEADERS
 
   private lang: string
 

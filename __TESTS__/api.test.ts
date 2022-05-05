@@ -1,18 +1,10 @@
 import fetch from 'node-fetch'
-import randomUserAgent from 'random-useragent'
+import { DEFAULT_HEADERS } from '../src/constants'
 
 const ACT_ID = process.env.ACT_ID
 const API_URL = process.env.API_URL
 const API_LANG = 'en'
 const STUPID_COOKIE = process.env.COOKIES || ''
-
-const DEFAULT_HEADERS = {
-  'user-agent': randomUserAgent.getRandom((ua) => parseFloat(ua.browserVersion) >= 90) || '',
-  Refer: 'https://webstatic-sea.hoyolab.com',
-  Accept: 'application/json, text/plain, */*',
-  Origin: 'https://webstatic-sea.hoyolab.com',
-  Connection: 'keep-alive',
-}
 
 const DAILY_STATUS_URL = `${API_URL}/info?lang=${API_LANG}&act_id=${ACT_ID}`
 const CLAIM_REWARD_URL = `${API_URL}/sign?lang=${API_LANG}`
