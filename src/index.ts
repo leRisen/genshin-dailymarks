@@ -92,6 +92,7 @@ class GenshinDailyMarks {
   public isClaimed = async (cookies: string) => this.getDailyStatus(cookies)
     .then((response) => response && response.data ? response.data.is_sign : null)
 
+  /* istanbul ignore next */
   private checkDailyMarks = async (cookies: string, prefix: string = '') => {
     const claimed = await this.isClaimed(cookies)
     if (claimed !== null) {
@@ -154,6 +155,7 @@ class GenshinDailyMarks {
     console.log('Schedule cron job', prefix)
 
     return cron.schedule(cronExpression, async () => {
+      /* istanbul ignore next */
       try {
         await this.checkDailyMarks(cookies, prefix)
       } catch (error) {
