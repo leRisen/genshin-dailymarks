@@ -57,7 +57,18 @@ class GenshinDailyMarks {
     await page.waitForSelector(this.SELECTOR_AVATAR_ICON)
     await page.click(this.SELECTOR_AVATAR_ICON)
 
-    await page.waitForResponse((response) => response.url().startsWith('https://api-account-os.hoyolab.com/auth/api/getUserAccountInfoByLToken') && response.status() === 200, {
+    await page.waitForResponse(async (response) => {
+      if (response.url().startsWith('https://api-account-os.hoyolab.com/auth/api/getUserAccountInfoByLToken') && response.status() === 200) {
+        try {
+          return await response.json()
+            .then((data) => data.message === 'OK')
+        } catch (_) {
+          return false
+        }
+      }
+
+      return false
+    }, {
       timeout: 0,
     })
 
