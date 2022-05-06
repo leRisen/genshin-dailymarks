@@ -3,7 +3,7 @@ import cookie from 'cookie'
 import { EventEmitter } from 'events'
 import type { Protocol } from 'puppeteer'
 
-import GenshinDailyMarks from '../src'
+import { GenshinDailyMarks } from '../src'
 import { stubPage, stubBrowser } from '../__MOCKS__/MockPuppeteer'
 
 const STUPID_COOKIE = process.env.COOKIES || ''

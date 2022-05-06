@@ -5,12 +5,35 @@ import cookie from 'cookie'
 import puppeteer from 'puppeteer'
 import randomUserAgent from 'random-useragent'
 
-import type Config from './types/Config'
-import type DailyStatus from './types/DailyStatus'
-import type ClaimReward from './types/ClaimReward'
+export interface ClaimReward {
+  retcode: number
+  message: string
+  data: {
+    code: string
+  } | null
+}
 
+export interface DailyStatus {
+  retcode: number
+  message: string
+  data: {
+    total_sign_day: number
+    today: string
+    is_sign: boolean
+    first_bind: boolean
+    is_sub: boolean
+    region: string
+  } | null
+}
 
-class GenshinDailyMarks {
+export interface GenshinDailyMarksConfig {
+  lang?: string
+  actId?: string
+  apiURL?: string
+  mainURL?: string
+}
+
+export class GenshinDailyMarks {
   readonly SELECTOR_AVATAR_ICON = '.mhy-hoyolab-account-block__avatar-icon'
 
   readonly DEFAULT_HEADERS = {
@@ -29,7 +52,7 @@ class GenshinDailyMarks {
 
   private mainURL: string
 
-  constructor(config?: Config) {
+  constructor(config?: GenshinDailyMarksConfig) {
     this.lang = config?.lang || 'en'
     this.actId = config?.actId || 'e202102251931481'
     this.apiURL = config?.apiURL || 'https://sg-hk4e-api.hoyolab.com/event/sol'
@@ -173,6 +196,3 @@ class GenshinDailyMarks {
     })
   }
 }
-
-export default GenshinDailyMarks
-module.exports = GenshinDailyMarks
