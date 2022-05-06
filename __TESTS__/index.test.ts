@@ -37,7 +37,7 @@ jest.mock('puppeteer', () => ({
 describe('is claimed', () => {
   it('should return boolean when an valid cookie string is passed', async () => {
     const isClaimed = await genshinDailyMarks.isClaimed(STUPID_COOKIE)
-    expect(isClaimed).toBeTruthy()
+    expect(typeof isClaimed === 'boolean').toBeTruthy()
   })
 
   it('should return null when an invalid cookie string is passed', async () => {
