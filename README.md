@@ -16,7 +16,7 @@ Simple. Flexible. Configurable. Utils with auto check (2 in 1)
 ## Example
 
 ```js
-const GenshinDailyMarks = require('genshin-dailymarks')
+const { GenshinDailyMarks } = require('genshin-dailymarks')
 
 /*
 * tmp/cookies.txt - path to file with cookies
