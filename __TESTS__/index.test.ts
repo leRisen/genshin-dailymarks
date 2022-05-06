@@ -24,6 +24,10 @@ afterEach(() => {
   jest.resetAllMocks()
 })
 
+beforeEach(() => {
+  jest.spyOn(console, 'log').mockImplementation()
+})
+
 jest.mock('puppeteer', () => ({
   launch() {
     return stubBrowser
@@ -100,7 +104,7 @@ describe('autoCheck', () => {
   const resolveEmpty = () => Promise.resolve()
   const rejectSomeError = () => Promise.reject(new Error('some error'))
 
-  it('should return error if parse cookies failed', async () => {
+  it('should return some error if parse cookies failed', async () => {
     jest.spyOn(stubPage, 'click').mockImplementation(rejectSomeError)
     await expect(genshinDailyMarks.autoCheck())
       .rejects
