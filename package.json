@@ -7,8 +7,14 @@
     "lint": "npx eslint . --ext .ts",
     "test": "jest --setupFiles dotenv/config",
     "build": "tsc",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run lint"
+    "prepublishOnly": "npm run build && npm run lint && npm run test"
+  },
+  "files": [
+    "dist"
+  ],
+  "directories": {
+    "lib": "src",
+    "test": "__TESTS__"
   },
   "repository": {
     "type": "git",
